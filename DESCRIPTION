@@ -1,0 +1,51 @@
+Package: Soysambu
+Type: Package
+Title: Documentation for Fieldwork in Soysambu Wildlife Conservancy, Great Rift, Kenya
+Version: 0.1.0
+Author: Henk Harmsen
+Maintainer: Henk Harmsen <henk@harmsen.eco>
+Description: Fieldwork consisted of: (i) Interviews with rangers; (2) Transects during which 
+    snare locations were mapped; (3) Ranger estimations for the number of snares they thought
+    would be found during the transects. Data that were collected by the Conservancy were processed.
+    This included census data for wild animals, counts for livestock and weather data.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 2.10)
+Imports:
+    curl,
+    data.table,
+    dismo,
+    doParallel,
+    fasterize,
+    foreach,
+    geosphere,
+    geostatsp,
+    ggplot2,
+    here,
+    Hmisc,
+    ineq,
+    librarian,
+    lubridate,
+    maditr,
+    maptools,
+    nngeo,
+    raster,
+    rgeos,
+    readxl,
+    quanteda,
+    sf,
+    sp,
+    spatstat,
+    stringr,    
+    tmap,
+    tmaptools,
+    viridis,
+    zoo,
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
