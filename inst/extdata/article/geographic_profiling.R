@@ -34,6 +34,13 @@ ggplot(z[variable=="Elmenteita", ])+
   facet_grid(variable ~., scales="free", space="free") +
   theme_bw()
 
+ggplot(z)+
+  geom_density(aes(value),col="steelblue", bw=1000)+
+  geom_rug(aes(value),col="grey")+
+  facet_grid(variable ~., scales="free", space="free") +
+  theme_bw()
+
+
 # also plot distances
 
 # distmap(comm) %>% plot(col=viridis(255,direction=-1))

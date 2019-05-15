@@ -143,3 +143,8 @@ mydata=data.table(past, future)
 oneway_test(past~future, data=mydata, distribution="exact")
 
 with(freq_poachers, chisq.test(No.report, Freqf, simulate.p.value=T))
+
+
+# how would you catch poachers? (open questions)
+o=open_questions[Nr %in% c(1,2,5,6), .(Question,Answer)]
+dcast(o, Answer ~ Nr)

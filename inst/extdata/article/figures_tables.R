@@ -196,6 +196,12 @@ plotstuff(plot.snares=T, cex=0.7)
 
 dev.off()
 
+# as points --------------
+
+dist.bp=bdist.points(pp_lake)
+dist.rd=nearestsegment(pp_lake, soysambu_roads_lake_psp)
+dist.brp=pmin(dist.bp,dist.rd)
+
 
 # diagnostics -------------------------------------------------------------------------------------------
 

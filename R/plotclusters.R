@@ -40,9 +40,10 @@ plotclusters=function(p, distance, add=F, clusterpoints=5, main=NULL) {
   hotspots=split(sh)
 
   # plot -----------------------------------------------------------------
+
   a=plot(spatstat::dilation(Y, distance), add=add, col="orange", main=main)
   plot(X, main="", pch=3, cex=0.5, add=T)                     # these are the points that were thrown away
-  spatstat::stienen(Y, add=T, bg="orange")
+  # spatstat::stienen(Y, add=T, bg="orange")
 
   # identify hotspot centroids -------------------------------------------
   hs=spatstat::dilation(Y,distance)                             # see diameter above

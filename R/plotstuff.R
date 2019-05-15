@@ -29,6 +29,9 @@ plotstuff = function(plot.snares=F, plot.lake=T, plot.legend=T, plot.allroads=F,
              poi$type != "town" &
              poi$type != "area" &
              poi$type != "community",]
+  baruk.stores=subset(poi,waypoint=="Baruk Stores")
+  pi=rbind(pi,baruk.stores)
+
   pi$type = stringr::str_to_title(pi$type)
   colnames(pi)[2]="Waypoint type"
 
@@ -38,7 +41,10 @@ plotstuff = function(plot.snares=F, plot.lake=T, plot.legend=T, plot.allroads=F,
 
   gates=pix[stringr::str_detect(waypoint, "Gate"),]
   hotels=pix[waypoint %like% "Camp" | stringr::str_detect(waypoint, "lodge"),]
-  other=pix[waypoint=="Lookout" | waypoint=="Head Office"]
+  # other=pix[waypoint=="Lookout" | waypoint=="Head Office"]
+  hq=pix[waypoint=="Head Office",]
+  baruk.stores=pix[waypoint=="Baruk Stores"]
+  lookout=pix[waypoint=="Lookout"]
 
 
   # set up snares from pointpattern -------------------------
@@ -73,8 +79,8 @@ plotstuff = function(plot.snares=F, plot.lake=T, plot.legend=T, plot.allroads=F,
   # plot legend?
   if (plot.legend) {
     legend("bottomleft",
-           legend=c("neck snares", "ground snares", "gates", "hotels", "head office, lookout"),
-           pch = c(3,4,0,1,2),
+           legend=c("neck snares", "ground snares", "gates", "hotels", "head office", "lookout","settlement"),
+           pch = c(3,4,0,1,2,8,7),
            box.lty=0,
            cex=cex)
   }
@@ -82,7 +88,9 @@ plotstuff = function(plot.snares=F, plot.lake=T, plot.legend=T, plot.allroads=F,
   # plot poi
   points(gates$lon, gates$lat, pch=0, col="black", cex=cex)
   points(hotels$lon, hotels$lat, pch=1, col="black", cex=cex)
-  points(other$lon, other$lat, pch=2, col="black", cex=cex)
+  points(hq$lon, hq$lat, pch=2, col="black", cex=cex)
+  points(lookout$lon, lookout$lat, pch=8, col="black", cex=cex)
+  points(baruk.stores$lon, baruk.stores$lat, pch=7, col="black", cex=cex)
 
 }
 

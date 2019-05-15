@@ -3,6 +3,7 @@
 
 library(data.table)
 library(maditr)
+library(readxl)
 
 path=here::here("inst", "extdata","interviews", "interviews.xlsx")
 
@@ -159,3 +160,26 @@ usethis::use_data(snare_estimates_raw, overwrite=overwrite)
 
 snare_estimates = zz
 usethis::use_data(snare_estimates, overwrite=overwrite)
+
+
+# observations of poachers ========
+
+sightings=read_excel(path=path,sheet="poacher_sightings") %>% setDT
+
+setcolorder(sightings,c("Frequency","n","f","EV"))
+sightings[, `:=` (
+  f=f %>% as.numeric %>% round(3),
+  EV=round(EV,3)
+)]
+
+library(knitr)
+kable(sightings,format="latex",booktabs=T)
+
+
+# no report and violence raw:
+
+noreport=read_excel(path=path,sheet="sightings_noreport_violence") %>% setDT
+noreport=noreport[, .(`No report`,Violence)]
+setnames(noreport,c("no_report","violence"))
+noreport[, .N,no_report][]
+noreport[, .N,violence]
