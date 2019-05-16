@@ -192,6 +192,25 @@ plot(unmark(comm),add=T,pch=0, main="")
 dev.off()
 
 
+# distance decay function ==================
+
+# take the Elmentaita tile...
+elmtile=tiles(d)[[2]]
+elmsnares=snares[elmtile]
+
+# ...and take the difference with the Elmentaita position
+elm=comm[elmtile]
+
+dist.elm=crossdist(elm,elmsnares) %>% as.vector
+
+plotter(file="distance_decay.pdf")
+dist.elm %>% density(bw="nrd",from=0) %>% plot(main="")
+rug(dist.elm)
+dev.off()
+
+
+
+
 # bush-open area interface ============
 
 predictors=brick("/home/henk/Documents/PhD/Soysambu/Soysambu/inst/extdata/spatial/brickfile.grd")
@@ -258,6 +277,13 @@ marks(quarry)$datex=droplevels(marks(quarry)$datex)
 
 
 # plot
+ys=yardstick(as.psp(list(xmid=4, ymid=0.5, length=1, angle=0),
+                       window=Window(quarry)),
+                txt="1 m")
+
+ys=yardstick(x0=845978.6+10,y0=862845.7,x1=845978.6+20,y1=862845.7)
+plot(ys,add=T)
+
 
 plotter(file="serena_repeat.pdf")
 plot(serena,which.marks="datex",main="", cex=0.7)
