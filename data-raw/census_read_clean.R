@@ -6,7 +6,7 @@
 # set up ============
 
 pacman::p_load(lubridate, stringr, readxl, data.table, foreach, zoo,
-               ggplot2, Soysambu, ggCorpIdent, gganimate, pacman)
+               ggplot2, Soysambu, gganimate, pacman)
 overwrite=F
 
 # census.file = "./inst/extdata/other_data/censusdata.xlsx"
