@@ -1,4 +1,4 @@
-pacman::p_load(geoviz,rayshader,Soysambu, raster,viridis, sf)
+pacman::p_load(geoviz,rayshader,Soysambu, raster,viridis, sf,spatstat)
 aster=raster("/home/henk/Documents/PhD/Soysambu/Soysambu/inst/extdata/spatial/aster.tif")
 
 sunangle = 270

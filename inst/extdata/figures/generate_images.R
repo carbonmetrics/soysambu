@@ -11,7 +11,7 @@ if(!require(pacman)){
 }else{
   pacman::p_load(Soysambu, sf, raster, spatstat, tmap, tmaptools,
                  OpenStreetMap, mapedit, mapview, leaflet, here, lubridate, stringr,
-                 viridis, maptools, ggplot2,data.table,forcats)
+                 viridis, maptools, ggplot2,data.table,forcats,foreach)
 }
 
 path="/home/henk/Documents/PhD/Soysambu/Soysambu/inst/extdata/figures/"
@@ -96,6 +96,10 @@ par(mfrow=c(1,1))
 
 dev.off()
 
+roads=layered(soysambu_roads_psp,plotargs=list(col="grey60",show.all=F,show.window=F,ribbon=F))
+snares.found=layered(snares, plotargs=list(cols="grey30",which.marks=cat,main=""))
+snares.roads=layered(snares.found, roads)
+plot(snares.roads)
 
 # Hotspots =======================
 
@@ -204,7 +208,7 @@ elm=comm[elmtile]
 dist.elm=crossdist(elm,elmsnares) %>% as.vector
 
 plotter(file="distance_decay.pdf")
-dist.elm %>% density(bw="nrd",from=0) %>% plot(main="")
+dist.elm %>% density(bw="nrd",from=0) %>% plot(main="",xlab="Distance from Elmenteita village (m)",cex.axis=2,cex.lab=2)
 rug(dist.elm)
 dev.off()
 
@@ -250,6 +254,7 @@ a=structure(list(type = "rectangle", xrange = c(860425.277862241,
 serena=snares[a]
 serena=subset(serena,datex %in% c("2018-12-05","2019-01-17","2019-03-27"))
 marks(serena)$datex=droplevels(marks(serena)$datex)
+chs=convexhull.xy(serena)
 
 
 # Jolai Gate hotspot
@@ -262,6 +267,7 @@ b=structure(list(type = "rectangle", xrange = c(855345.956837355,
                                                                           multiplier = 1), class = "unitname")), class = "owin")
 jolai.gate=snares[b]
 marks(jolai.gate)$datex=droplevels(marks(jolai.gate)$datex)
+chj=convexhull.xy(jolai.gate)
 
 
 # quarry hotspot
@@ -274,58 +280,78 @@ d=structure(list(type = "rectangle", xrange = c(850980.340565514,
                                                                           multiplier = 1), class = "unitname")), class = "owin")
 quarry=snares[d]
 marks(quarry)$datex=droplevels(marks(quarry)$datex)
+chq=convexhull.xy(quarry)
 
 
 # plot
-ys=yardstick(as.psp(list(xmid=4, ymid=0.5, length=1, angle=0),
-                       window=Window(quarry)),
-                txt="1 m")
-
-ys=yardstick(x0=845978.6+10,y0=862845.7,x1=845978.6+20,y1=862845.7)
-plot(ys,add=T)
-
-
-plotter(file="serena_repeat.pdf")
-plot(serena,which.marks="datex",main="", cex=0.7)
-chs=convexhull.xy(serena)
-plot(chs,add=T,border="lightgrey",main="")
-dev.off()
-
-plotter(file="jolai_repeat.pdf")
-plot(jolai.gate, which.marks="datex",main="", cex=0.7)
-chj=convexhull.xy(jolai.gate)
-plot(chj,add=T,border="lightgrey", main="")
-dev.off()
-
-plotter(file="quarry_repeat.pdf")
-plot(quarry, which.marks="datex",main="", cex=0.7)
-chq=convexhull.xy(quarry)
-plot(chq,add=T,border="lightgrey", main="")
-dev.off()
+# plotter(file="serena_repeat.pdf")
+# plot(serena,which.marks="datex", main="", show.window=F)
+# chs=convexhull.xy(serena)
+# plot(chs,add=T,border="lightgrey",main="")
+# dev.off()
+#
+# plotter(file="jolai_repeat.pdf")
+# plot(jolai.gate, which.marks="datex",main="",show.window=F)
+# chj=convexhull.xy(jolai.gate)
+# plot(chj,add=T,border="lightgrey", main="")
+# dev.off()
+#
+# plotter(file="quarry_repeat.pdf")
+# plot(quarry, which.marks="datex",main="", show.window=F)
+# chq=convexhull.xy(quarry)
+# plot(chq,add=T,border="lightgrey", main="")
+# dev.off()
 
 # location in soysambu map
 # centroid of clusters
-quarry.centroid=centroid.owin(chq, as.ppp=T)
-serena.centroid=centroid.owin(chs, as.ppp=T)
-jolai.centroid=centroid.owin(chj, as.ppp=T)
-hotspots=superimpose(quarry.centroid,serena.centroid,jolai.centroid)
-
-plotter(file="repeat_hotspots.pdf")
-plot(Window(snares),main="")
-plot(Window(hotspots),add=T,col="lightgrey")
-plot(hotspots, add=T, pch="+")
-legend("bottomleft",legend="whatever is required to make space", bty="n", text.col="white")
-dev.off()
+# quarry.centroid=centroid.owin(chq, as.ppp=T)
+# serena.centroid=centroid.owin(chs, as.ppp=T)
+# jolai.centroid=centroid.owin(chj, as.ppp=T)
+# hotspots=superimpose(quarry.centroid,serena.centroid,jolai.centroid)
+#
+# plotter(file="repeat_hotspots.pdf")
+# plot(Window(snares),main="")
+# plot(Window(hotspots),add=T,col="lightgrey")
+# plot(hotspots, add=T, pch="+")
+# legend("bottomleft",legend="whatever is required to make space", bty="n", text.col="white")
+# dev.off()
 
 # areas
 round(spatstat::area(chs)/(100*100)) # area in hectare
 round(spatstat::area(chj)/(100*100)) # area in hectare
-# round(spatstat::area(chq)/(100*100)) # area in hectare
+round(spatstat::area(chq)/(100*100)) # area in hectare
 
 # counts by date
 # ppp_dt(quarry)[, .(snare.count=sum(snares)), datex]
 ppp_dt(jolai.gate)[, .(snare.count=sum(snares)), datex]
 ppp_dt(serena)[, .(snare.count=sum(snares)), datex]
+
+# plot
+# overview
+hotspots=layered(chq,chs,chj,plotargs=list(main="",border="grey70",col="grey90"))
+hotspot.locations=layered(hotspots,Window(snares),plotargs=list(main=""))
+
+# individual hotspots
+plotargs=list(border="lightgrey", which.marks="datex",show.window=F,main="")
+h1=layered(serena,chs,plotargs=plotargs)
+h2=layered(jolai.gate,chj,plotargs=plotargs)
+h3=layered(quarry,chq,plotargs=plotargs)
+
+l=solist(h1,h2,h3,hotspot.locations)
+
+foreach(i=1:length(l)) %do% {
+  plotter(file=paste0("repeat",i))
+  plot(l[i],main="",mar.panel=c(0,0,0,0))
+  dev.off()
+}
+
+system("./pdfcrop.sh")
+
+plotter(file="hotspots_repeats.pdf")
+plot(l,main="")
+dev.off()
+system("pdfcrop hotspots_repeats.pdf hotspots_repeats.pdf")
+
 
 
 # Likert plot =========

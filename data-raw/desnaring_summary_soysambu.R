@@ -3,7 +3,7 @@
 #' It can therefore be used at least for an estimation of patrol effort for selected hotspots.
 
 # set up
-pacman::p_load(readxl, data.table, stringr, maditr, zoo, lubridate,knitr,sf)
+pacman::p_load(readxl, data.table, stringr, maditr, zoo, lubridate,knitr,sf,Soysambu,spatstat)
 
 # read
 x = read_excel("./inst/extdata/other_data/SnaringReport.xlsx", skip=1) %>% setDT
@@ -39,3 +39,6 @@ a=sf_dt(utm)
 b=ppp(x=a$lon,y=a$lat,window=Window(snares), marks=as.factor(utm$datex))
 b=as.ppp(b)
 plot(b,which.marks="datex", main="")
+
+# split by date
+split(b,by="datex") %>% plot(use.marks=F)
