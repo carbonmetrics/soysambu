@@ -9,7 +9,6 @@ pacman::p_load(lubridate, stringr, readxl, data.table, foreach, zoo,
                ggplot2, Soysambu, gganimate, pacman)
 overwrite=F
 
-# census.file = "./inst/extdata/other_data/censusdata.xlsx"
 census.file="/home/henk/Documents/PhD/Soysambu/Soysambu/inst/extdata/other_data/201905_SoyWildlifeCensusAccumulated  (version 1).xlsx"
 
 mysheets = readxl::excel_sheets(census.file)
@@ -87,7 +86,6 @@ ll[Species == "Springhare", Species := "Spring Hare"]
 ll[Species=="Guinea Fowl (Flocks)", Species := "Guinea Fowl Flocks"]
 ll[Species=="Sid St-Jackals",Species:="Sid St-Jackal"]
 
-
 ll[, CensusDate := tolower(date) %>% str_to_title]
 ll[, CensusDate := {
   t1 = str_extract(CensusDate, "\\D+")
@@ -104,6 +102,7 @@ df = ll[!is.na(Species)]
 
 df=ll[, .(CensusDate,Species,Count)]
 
+
 # plot ==============
 
 # remove species that have a low total count ...
@@ -116,12 +115,7 @@ lowcounts=df[, .N,Species][N<5,Species]
 dfx=df[Species %nin% nulls,]
 dfx=dfx[Species %nin% lowcounts,]
 
-
-# plot
-# myCorpColors = c("dodgerblue4", "violetred1", "mintcream")
-# ggCorpIdent(colors=myCorpColors,base_family="Aller")
-# p_unload(ggCorpIdent)
-
+# static plot -----
 theme_set(theme_bw())
 
 ggplot(dfx,aes(x=CensusDate,y=Count))+
@@ -130,7 +124,7 @@ ggplot(dfx,aes(x=CensusDate,y=Count))+
   theme(text=element_text(size=9,  family="Aller"))+
   facet_wrap(Species~.,scales="free_y")
 
-# animated
+# animated plot -----
 
 myspecies=c("Thompson Gazelle","Dikdik","Zebra","Eland")
 
@@ -146,6 +140,8 @@ animate(px,fps=4)
 setwd("~/Documents/PhD/Soysambu/Soysambu/inst/extdata/other_data")
 anim_save(filename="census_animated.gif")
 
+
+# close out -----
 
 # register in R package
 if(overwrite){
